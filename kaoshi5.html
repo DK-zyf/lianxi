@@ -3,33 +3,149 @@
 <meta charset="UTF-8">
 </head>
 
-<body>
-<form  id="myForm"  style="margin-left:35%" action="/card/cardReg"   method="get">
+
+
+<body  onload="saiSyou()">
+<form  id="myForm"   name="myForm"  style="margin-left:35%" action="https://httpbin.org/get"   method="get">
 在留资格：
-<select  id="visa"  style="width:80px">
+<select  id="visa"  style="width:80px" onchange="visaChange()">
 	<option  value="0">留学</option>
+	<option  value="1">就劳</option>
+	<option  value="2">永住者</option>
 </select>
 许可期间：
-<select  id="time"  style="width:80px">
-	<option  value="1">1年</option>
+<select  id="time"  style="width:80px"  onchange="timeChange()">
+	<option  value="0">1年</option>
+	<option  value="1">3年</option>
+	<option  value="2">4年</option>
 </select></br>
 
 在留番号：
-<input  type="text"  style="width:150px"  value="请输入在留号码"></br>
+<input  id="number"  type="text"  style="width:150px"   onchange="numberChange()"></br>
 
 指望动机：
-<input  type="checkbox"  name="dongJi"  value="0"> 留学
-<input  type="checkbox"  name="dongJi"  value="1"> 工作
-<input  type="checkbox"  name="dongJi"  value="2"> 研修</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input  type="checkbox"  name="dongJi"  value="0"  onchange="dongjiChange()"> 留学
+<input  type="checkbox"  name="dongJi"  value="1"  onchange="dongjiChange()"> 工作
+<input  type="checkbox"  name="dongJi"  value="2"  onchange="dongjiChange()"> 研修</br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<input  type="checkbox"  name="dongJi"  value="3"> 旅行
-<input  type="checkbox"  name="dongJi"  value="4"> 投资
-<input  type="checkbox"  name="dongJi"  value="5"> 外交</br>
+<input  type="checkbox"  name="dongJi"  value="3"  onchange="dongjiChange()"> 旅行
+<input  type="checkbox"  name="dongJi"  value="4"  onchange="dongjiChange()"> 投资
+<input  type="checkbox"  name="dongJi"  value="5"  onchange="dongjiChange()"> 外交</br>
 
-<input  type="button"  id="submit" value="留学登入">
+<input  type="button"  id="subButton" value="留学登入"  onclick="buttonClick()" >
 </form>
 </body>
 
+
 <script>
+function saiSyou(){
+	let  visa = document.getElementById("visa");
+	let  time = document.getElementById("time");
+	let  number = document.getElementById("number");
+	let  dongJi = document.getElementsByName("dongJi");
+	let  subButton = document.getElementById("subButton");
+
+	visa.value= 0;
+	time.value=0;
+	number.value = "请输入在留号码";
+	dongJi[0].checked=true;
+	subButton.value="留学登入";
+}
+
+function visaChange(){
+	let  visa = document.getElementById("visa");
+	let  time = document.getElementById("time");
+	let  subButton = document.getElementById("subButton");
+
+	if(visa.value=="1"){
+		time.disabled = false;
+		time.innerHTML= "<option value = '0'>1年</option>"+
+						"<option  value = '1'  selected>3年</option>";
+		subButton.value="登入";
+	}if(visa.value=="0"){
+		time.disabled = false;
+		time.innerHTML= "<option value = '0'>1年</option>"+
+						"<option  value = '1'>3年</option>" +
+						"<option  value = '2'>4年</option>";
+		subButton.value="留学登入";
+	}if(visa.value=="2"){
+		time.innerHTML= "<option value = '3'  checked >-</option>";
+		time.disabled = true;
+		subButton.value="登入";
+	}
+}
+
+function timeChange(){
+	let  visa = document.getElementById("visa");
+	let time =  document.getElementById("time");
+	let  dongJi = document.getElementsByName("dongJi");
+	for(let i=0;i<dongJi.length;i++){
+		dongJi[i].checked = false;
+	}
+
+	if(visa.value=="0" && (time.value=="1" || time.value=="2")){
+		dongJi[0].checked=true;
+		dongJi[1].checked=true;
+	}
+	if(visa.value=="1" && time.value=="0"){
+		dongJi[1].checked=true;
+	}	
+}
+
+
+function numberChange(){
+	let number = document.getElementById("number");
+
+	let value=number.value.trim();
+	let result = "";
+	for(let i=0;i<value.length;i++){
+		if(value[i]==" "){
+			result=result+"";
+		}else{
+			result=result+value[i];
+		}
+	}
+	
+
+	if(result[0] != "H" || isNaN(result[11])  ||  result.length != 12){
+		alert("在留番号格式不对");
+		result = "";
+	}
+	number.value=result;
+
+}
+//-------------------------------------------------------------
+function dongjiChange(){
+	let  dongJi = document.getElementsByName("dongJi");
+	let  subButton = document.getElementById("subButton");
+
+	if(dongJi[0].checked && dongJi[1].checked && dongJi[2].checked && dongJi[3].checked && dongJi[4].checked && dongJi[5].checked){
+		subButton.click();
+	}
+}
+//------------------------------------------------------------------------
+
+
+function buttonClick(){
+	let  dongJi = document.getElementsByName("dongJi");
+	let  counts = 0;
+	let result="";
+
+	for(let i=0;i<dongJi.length;i++){
+		if(dongJi[i].checked == true){
+			result = result +dongJi[i].innerHTML;
+			counts++;
+		}
+	}
+
+	if(counts <=2){
+		alert("网站");
+		location.href = "https://www.google.com"
+	}else{
+		alert("result");
+		document.getElementById("myForm").submit();
+
+	}
+}
 </script>
 </html>
