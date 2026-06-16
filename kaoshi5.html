@@ -129,20 +129,21 @@ function dongjiChange(){
 function buttonClick(){
 	let  dongJi = document.getElementsByName("dongJi");
 	let  counts = 0;
+	let text = ["留学","工作","研修","旅行","投资","外交"];
 	let result="";
 
 	for(let i=0;i<dongJi.length;i++){
 		if(dongJi[i].checked == true){
-			result = result +dongJi[i].innerHTML;
+			result = result+"  "+text[i];
 			counts++;
 		}
 	}
 
 	if(counts <=2){
 		alert("网站");
-		location.href = "https://www.google.com"
+		location.href = "https://www.google.com";
 	}else{
-		alert("result");
+		alert(result);
 		document.getElementById("myForm").submit();
 
 	}
